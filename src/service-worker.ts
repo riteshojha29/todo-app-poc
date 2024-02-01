@@ -104,7 +104,6 @@ self.addEventListener('install', installEvent => {
   .then(chache => 
     chache.addAll(appShellFiles))
 )
-console.log('chache done');
 });
 
 // Fetch chached assets
@@ -116,5 +115,4 @@ self.addEventListener('fetch', fetchEvent => {
       return response || fetch(fetchEvent.request)
     })
   )
-  console.log('fecth chache done');
 })

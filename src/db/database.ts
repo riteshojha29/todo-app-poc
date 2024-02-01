@@ -9,9 +9,13 @@ import { ToDoTask } from '../types/ToDoTask';
     };
   }
 
-  export const dbPromise = openDB<todoDB>("todoPwaDatabase", 1, {
+  const dbName = "todoPwaDatabase";
+  const dbVersion: number = 1;
+  const dbTableName = "todoData";
+
+  export const dbPromise = openDB<todoDB>(dbName, dbVersion, {
     upgrade(db) {
-      const dbStore = db.createObjectStore("todoData", {
+      const dbStore = db.createObjectStore(dbTableName, {
         keyPath: "id",
         autoIncrement: true,
       });
@@ -26,31 +30,31 @@ export const todoDataService = {
     // Save todo task in database
     async saveToDoTask(data: ToDoTask) {
         const db = await dbPromise;
-        const transaction = db.transaction('todoData', 'readwrite');
-        const store = transaction.objectStore('todoData');
+        const transaction = db.transaction(dbTableName, 'readwrite');
+        const store = transaction.objectStore(dbTableName);
         await store.add(data);
     },
 
     // Get all todo tasks from database
     async getToDoTasks(): Promise<ToDoTask[]> {
         const db = await dbPromise;
-        const transaction = db.transaction('todoData', 'readonly');
-        const store = transaction.objectStore('todoData');
+        const transaction = db.transaction(dbTableName, 'readonly');
+        const store = transaction.objectStore(dbTableName);
         const results = await store.getAll();
         return results;
     },
 
     async deleteToDoTask(id: number) {
         const db = await dbPromise;
-        const transaction = db.transaction('todoData', 'readwrite');
-        const store = transaction.objectStore('todoData');
+        const transaction = db.transaction(dbTableName, 'readwrite');
+        const store = transaction.objectStore(dbTableName);
         await store.delete(id);
     },
 
     async updateToDoTask(data: ToDoTask) {
         const db = await dbPromise;
-        const transaction = db.transaction('todoData', 'readwrite');
-        const store = transaction.objectStore('todoData');
+        const transaction = db.transaction(dbTableName, 'readwrite');
+        const store = transaction.objectStore(dbTableName);
         await store.put(data);
       },
 };
