@@ -20,12 +20,6 @@ import { ToDoTask } from '../types/ToDoTask';
     },
   });
 
-  ///////
-// const dbPromise = openDB('todoPwaDatabase', 1, {
-//     upgrade(db) {
-//       db.createObjectStore('todoData', { keyPath: 'id' });
-//     },
-//   });
 
 export const todoDataService = {
 
