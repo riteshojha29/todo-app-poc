@@ -1,4 +1,5 @@
 import React, { useState} from 'react';
+import { todoDataService  } from '../db/database';
 import { ToDoTask } from '../types/ToDoTask';
 
 interface ToDOForProps {
@@ -10,7 +11,7 @@ export const ToDoForm: React.FC<ToDOForProps> = ({todoItems, setToDoItems}) => {
 
     const [description, setDescription] = useState('');
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent) => {
       event.preventDefault();
       
       if(!description) {
@@ -18,9 +19,16 @@ export const ToDoForm: React.FC<ToDOForProps> = ({todoItems, setToDoItems}) => {
         return;
       }
 
-      setToDoItems([...todoItems, new ToDoTask(description)]);
+      const newTask = new ToDoTask(description);
+
+      // Saving data to local db
+      await todoDataService.saveToDoTask(newTask);
+
+      setToDoItems([...todoItems, newTask]);
       setDescription('');
     }
+
+
 
     return (
       <form className='todo-form' onSubmit={handleSubmit}>
