@@ -78,3 +78,43 @@ self.addEventListener('message', (event) => {
 });
 
 // Any other custom service worker logic can go here.
+
+// Chache assets
+const cacheToDoPWA = "todoPWA-v1";
+const appShellFiles = [
+  "/",
+  "/public/index.html",
+  "/public/logo192.png",
+  "/public/logo512.png",
+  "/src/App.css",
+  "/src/App.tsx",
+  "/src/index.css",
+  "/src/index.tsx",
+  "/src/logo.svg",
+  "/src/components/ToDoForm.tsx",
+  "/src/components/ToDoItem.tsx",
+  "/src/components/ToDoList.tsx",
+  "/src/types/ToDoTask.ts",
+  "/src/service-worker.ts",
+];
+
+self.addEventListener('install', installEvent => {
+  installEvent.waitUntil(
+  caches.open(cacheToDoPWA)
+  .then(chache => 
+    chache.addAll(appShellFiles))
+)
+console.log('chache done');
+});
+
+// Fetch chached assets
+
+self.addEventListener('fetch', fetchEvent => {
+  fetchEvent.respondWith(
+    caches.match(fetchEvent.request)
+    .then(response => {
+      return response || fetch(fetchEvent.request)
+    })
+  )
+  console.log('fecth chache done');
+})
